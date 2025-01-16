@@ -1,58 +1,82 @@
 {
-  "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "defaultBase": "master",
-  "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "production": [
-      "default",
-      "!{projectRoot}/.eslintrc.json",
-      "!{projectRoot}/eslint.config.cjs",
-      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-      "!{projectRoot}/tsconfig.spec.json",
-      "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/src/test-setup.[jt]s",
-      "!{projectRoot}/test-setup.[jt]s",
-      "!{projectRoot}/cypress/**/*",
-      "!{projectRoot}/**/*.cy.[jt]s?(x)",
-      "!{projectRoot}/cypress.config.[jt]s"
-    ],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+  "npmScope": "sysmo-cloud",
+  "affected": {
+    "defaultBase": "develop"
   },
-  "nxCloudId": "678960fef996972cd4c4278b",
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "nx/tasks-runners/default",
+      "options": {
+        "cacheDirectory": ".nx/cache",
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e",
+          "component-test"
+        ],
+        "parallel": 3
+      }
+    }
+  },
+  "generators": {
+    "@nx/angular:application": {
+      "e2eTestRunner": "cypress",
+      "linter": "eslint",
+      "style": "scss",
+      "unitTestRunner": "none"
+    },
+    "@nx/angular:library": {
+      "linter": "eslint",
+      "unitTestRunner": "none",
+      "skipTests": true
+    },
+    "@nx/angular:component": {
+      "style": "scss"
+    }
+  },
+  "defaultProject": "shell",
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "targetDefaults": {
-    "@angular-devkit/build-angular:browser": {
+    "build": {
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "test": {
+      "inputs": ["default", "^production"]
+    },
+    "lint": {
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+    },
+    "e2e": {
+      "inputs": ["default", "^production"]
+    },
+    "component-test": {
+      "inputs": ["default", "^production"]
+    },
+    "@angular-devkit/build-angular:application": {
       "cache": true,
       "dependsOn": ["^build"],
       "inputs": ["production", "^production"]
     },
-    "@nx/eslint:lint": {
-      "cache": true,
-      "inputs": [
-        "default",
-        "{workspaceRoot}/.eslintrc.json",
-        "{workspaceRoot}/.eslintignore",
-        "{workspaceRoot}/eslint.config.cjs"
-      ]
-    },
-    "@nx/jest:jest": {
-      "cache": true,
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
-      "options": {
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
-      }
-    },
     "e2e-ci--**/*": {
       "dependsOn": ["^build"]
-    },
-    "server": {
-      "cache": true
     }
+  },
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "sharedGlobals": [],
+    "production": [
+      "default",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/cypress/**/*",
+      "!{projectRoot}/**/*.cy.[jt]s?(x)",
+      "!{projectRoot}/cypress.config.[jt]s"
+    ]
+  },
+  "workspaceLayout": {
+    "projectNameAndRootFormat": "as-provided"
   },
   "plugins": [
     {
@@ -67,16 +91,8 @@
     {
       "plugin": "@nx/eslint/plugin",
       "options": {
-        "targetName": "lint"
+        "targetName": "eslint:lint"
       }
     }
-  ],
-  "generators": {
-    "@nx/angular:application": {
-      "e2eTestRunner": "cypress",
-      "linter": "eslint",
-      "style": "scss",
-      "unitTestRunner": "jest"
-    }
-  }
+  ]
 }
