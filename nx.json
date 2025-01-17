@@ -21,10 +21,10 @@
   },
   "generators": {
     "@nx/angular:application": {
-      "e2eTestRunner": "cypress",
-      "linter": "eslint",
       "style": "scss",
-      "unitTestRunner": "none"
+      "linter": "eslint",
+      "unitTestRunner": "none",
+      "e2eTestRunner": "cypress"
     },
     "@nx/angular:library": {
       "linter": "eslint",
@@ -53,14 +53,6 @@
     },
     "component-test": {
       "inputs": ["default", "^production"]
-    },
-    "@angular-devkit/build-angular:application": {
-      "cache": true,
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
-    },
-    "e2e-ci--**/*": {
-      "dependsOn": ["^build"]
     }
   },
   "namedInputs": {
@@ -77,22 +69,5 @@
   },
   "workspaceLayout": {
     "projectNameAndRootFormat": "as-provided"
-  },
-  "plugins": [
-    {
-      "plugin": "@nx/cypress/plugin",
-      "options": {
-        "targetName": "e2e",
-        "openTargetName": "open-cypress",
-        "componentTestingTargetName": "component-test",
-        "ciTargetName": "e2e-ci"
-      }
-    },
-    {
-      "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "eslint:lint"
-      }
-    }
-  ]
+  }
 }

@@ -7,7 +7,7 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:browser",
+      "executor": "@nx/angular:webpack-browser",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/shell/browser",
@@ -19,11 +19,16 @@
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/shell/public"
+            "input": "apps/shell/public",
+            "output": "."
           }
         ],
         "styles": ["apps/shell/src/styles.scss"],
-        "scripts": []
+        "scripts": [],
+        "customWebpackConfig": {
+          "path": "apps/shell/webpack.config.js"
+        },
+        "commonChunk": false
       },
       "configurations": {
         "production": {
@@ -39,7 +44,10 @@
               "maximumError": "8kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/shell/webpack.prod.config.js"
+          }
         },
         "development": {
           "buildOptimizer": false,
@@ -53,7 +61,7 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "configurations": {
         "production": {
           "buildTarget": "shell:build:production"
@@ -62,16 +70,27 @@
           "buildTarget": "shell:build:development"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "options": {
+        "port": 4200,
+        "publicHost": "http://localhost:4200"
+      }
     },
     "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "ngx-build-plus:extract-i18n",
       "options": {
-        "buildTarget": "shell:build"
+        "buildTarget": "shell:build",
+        "extraWebpackConfig": "apps/shell/webpack.config.js"
       }
     },
     "lint": {
       "executor": "@nx/eslint:lint"
+    },
+    "serve-mfe": {
+      "executor": "nx:run-commands",
+      "options": {
+        "commands": ["nx serve login", "nx serve shell"]
+      }
     },
     "test": {
       "executor": "@nx/jest:jest",
