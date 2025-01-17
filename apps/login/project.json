@@ -4,26 +4,40 @@
   "projectType": "application",
   "prefix": "app",
   "sourceRoot": "apps/login/src",
-  "tags": ["scope:login", "type:app"],
+  "tags": [
+    "scope:login",
+    "type:app"
+  ],
   "targets": {
     "build": {
-      "executor": "@angular-devkit/build-angular:application",
-      "outputs": ["{options.outputPath}"],
+      "executor": "@nx/angular:webpack-browser",
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/login",
         "index": "apps/login/src/index.html",
-        "browser": "apps/login/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/login/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": [
           {
             "glob": "**/*",
-            "input": "apps/login/public"
+            "input": "apps/login/public",
+            "output": "."
           }
         ],
-        "styles": ["apps/login/src/styles.scss"],
-        "scripts": []
+        "styles": [
+          "apps/login/src/styles.scss"
+        ],
+        "scripts": [],
+        "main": "apps/login/src/main.ts",
+        "customWebpackConfig": {
+          "path": "apps/login/webpack.config.js"
+        },
+        "commonChunk": false
       },
       "configurations": {
         "production": {
@@ -39,7 +53,10 @@
               "maximumError": "8kb"
             }
           ],
-          "outputHashing": "all"
+          "outputHashing": "all",
+          "customWebpackConfig": {
+            "path": "apps/login/webpack.prod.config.js"
+          }
         },
         "development": {
           "optimization": false,
@@ -50,9 +67,10 @@
       "defaultConfiguration": "production"
     },
     "serve": {
-      "executor": "@angular-devkit/build-angular:dev-server",
+      "executor": "@nx/angular:dev-server",
       "options": {
-        "port": 4201
+        "port": 4201,
+        "publicHost": "http://localhost:4201"
       },
       "configurations": {
         "production": {
@@ -65,9 +83,10 @@
       "defaultConfiguration": "development"
     },
     "extract-i18n": {
-      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "executor": "ngx-build-plus:extract-i18n",
       "options": {
-        "buildTarget": "login:build"
+        "buildTarget": "login:build",
+        "extraWebpackConfig": "apps/login/webpack.config.js"
       }
     },
     "lint": {
