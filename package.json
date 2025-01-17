@@ -3,7 +3,27 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js"
+    "run:all": "node node_modules/@angular-architects/module-federation/src/server/mf-dev-server.js",
+    "nx": "nx",
+    "start": "nx serve",
+    "serve:all": "nx run shell:serve-mfe",
+    "build": "nx build",
+    "test": "nx test",
+    "affected:apps": "nx show projects --affected -t serve",
+    "affected:libs": "nx affected:libs",
+    "affected:build": "nx affected:build",
+    "affected:e2e": "nx affected:e2e",
+    "affected:test": "nx affected:test",
+    "affected:lint": "nx affected:lint",
+    "affected:dep-graph": "nx affected:dep-graph",
+    "affected": "nx affected",
+    "format:write": "nx format:write",
+    "format:check": "nx format:check",
+    "dep-graph": "nx dep-graph",
+    "workspace-schematic": "nx workspace-schematic",
+    "help": "nx help",
+    "lint-staged": "lint-staged",
+    "postinstall": "husky install"
   },
   "private": true,
   "dependencies": {
